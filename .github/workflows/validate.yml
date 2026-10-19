@@ -1,0 +1,26 @@
+name: Validate Extension
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Validate manifest.json
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('manifest.json', 'utf8')); console.log('manifest.json is valid JSON.');"
+
+      - name: Check Required Files
+        run: |
+          test -f manifest.json
+          test -f background.js
+          test -f content.js
+          test -f content.css
+          echo "All core extension files present."
